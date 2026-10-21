@@ -1,0 +1,26 @@
+name: Uptime
+
+# Every 10 minutes, checks the license server, the demo license server, the
+# license API, the website, the release manifest on Spaces, the /login/
+# allowlist and both TLS certificates (emode-photonix/emode#654). A failed
+# run is the alert: GitHub emails it to the account that owns the schedule.
+on:
+  schedule:
+    - cron: '*/10 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: uptime
+  cancel-in-progress: false
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v7
+      - name: Check every service
+        run: python3 ci/uptime.py
