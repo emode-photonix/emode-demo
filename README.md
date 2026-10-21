@@ -4,7 +4,6 @@
 
 A notebook that runs [EMode](https://emodephotonix.com), the photonic waveguide mode solver, in your browser. Open it in Google Colab, run the cells, and within about a minute you see the modes of a silicon waveguide, their fields as numpy arrays, and a width sweep. You need no EMode account and nothing on your computer.
 
-> This repository is private until it is reviewed. Until then the badge above opens the notebook only for someone signed in to Colab with a GitHub account that can see `emode-photonix/emode-demo`.
 
 ## How it works
 
@@ -51,4 +50,4 @@ Questions, or something not working? Write to [hello@emodephotonix.com](mailto:h
 
 ## License
 
-TODO(#1): choose a license for this repository (BSD-3-Clause or MIT). EMode itself is licensed under the [EMode EULA](https://emodephotonix.com/legal/eula.pdf).
+The notebook and the code in this repository are under the [BSD 3-Clause License](LICENSE). EMode itself is licensed under the [EMode EULA](https://emodephotonix.com/legal/eula.pdf).
