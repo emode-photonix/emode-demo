@@ -1,0 +1,59 @@
+name: Nightly notebook run
+
+# Runs EMode_demo.ipynb headless, the way a visitor's Colab runs it: it fetches
+# the demo credentials, installs the newest Linux-rslab release and solves.
+# One credential request per job, against a limit of 10 per address per hour.
+#
+# While the demo is paused (the endpoint answers enabled:false), the setup
+# cell stops with DemoPaused and the run passes with a notice. Any other error
+# in any cell, or a missing figure, fails it.
+
+on:
+  schedule:
+    - cron: '0 11 * * *'  # 11:00 UTC, two hours after the daily password rotation
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: nightly
+  cancel-in-progress: false
+
+jobs:
+  notebook:
+    strategy:
+      fail-fast: false
+      matrix:
+        # Colab's image moves between Ubuntu releases, so cover both.
+        os: [ubuntu-22.04, ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install Jupyter
+        run: python -m pip install --quiet nbconvert nbclient ipykernel matplotlib numpy
+
+      - name: Run the notebook
+        env:
+          PYTHONUNBUFFERED: '1'
+        run: >
+          jupyter nbconvert --to notebook --execute --allow-errors
+          --ExecutePreprocessor.timeout=900
+          --output executed.ipynb EMode_demo.ipynb
+
+      - name: Check every cell
+        run: python ci/check_executed.py executed.ipynb
+
+      - name: Keep the executed notebook
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: executed-${{ matrix.os }}
+          path: executed.ipynb
+          if-no-files-found: ignore
