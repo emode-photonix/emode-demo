@@ -10,7 +10,7 @@ A notebook that runs [EMode](https://emodephotonix.com), the photonic waveguide 
 The first cell, "Set up EMode", does everything a visitor would otherwise do by hand:
 
 1. Asks `https://emodephotonix.com/wp-json/custom/v1/demo-credentials/` for the demo account, the EMode release to install, that release's SHA-256 and the demo license manager. If the demo is paused, it prints the reason and stops.
-2. Installs the `emodeconnection` client library from PyPI, at the version this notebook is written for.
+2. Installs the `emode` client library from PyPI, at the version this notebook is written for.
 3. Downloads the lighter Linux build of EMode (`Linux-rslab`), checks its SHA-256 against the published one, and installs it. Nothing is installed when the checksum does not match.
 4. Stores the demo login with `emode login --write`, points EMode at the demo license manager (`EMODE_LICENSE_URL`), and opens a session.
 
