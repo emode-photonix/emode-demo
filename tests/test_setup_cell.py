@@ -17,8 +17,8 @@ import zipfile
 from pathlib import Path
 
 import pytest
-from emodeconnection import installer
-from emodeconnection.types import EModeError, LicenseError
+from emode import installer
+from emode.types import EModeError, LicenseError
 
 NOTEBOOK = Path(__file__).parent.parent / 'EMode_demo.ipynb'
 MAIN = "if platform.system() != 'Linux':"
@@ -82,7 +82,7 @@ def make_zip(path: Path) -> str:
 
 @pytest.fixture
 def fake_installer(tmp_path, monkeypatch):
-    """emodeconnection.installer with the network and the install faked. Returns the call log."""
+    """emode.installer with the network and the install faked. Returns the call log."""
     calls: list[str] = []
     zip_source = tmp_path / 'source.zip'
     sha256 = make_zip(zip_source)
@@ -261,9 +261,9 @@ def started(cell, monkeypatch, tmp_path):
             if state.error is not None:
                 raise state.error
 
-    import emodeconnection
+    import emode
 
-    monkeypatch.setattr(emodeconnection, 'EMode', FakeEMode)
+    monkeypatch.setattr(emode, 'EMode', FakeEMode)
     monkeypatch.setitem(cell, 'install_emode', lambda demo: tmp_path / 'bin' / 'emode')
     monkeypatch.setitem(cell, 'log_in', lambda exe, demo: None)
     monkeypatch.setenv('PATH', '/usr/bin')
